@@ -13,7 +13,7 @@ OBJ = obj
 ASM = asm
 
 TARGET = $(BIN)/os.bin
-OBJECTS = $(OBJ)/kernel.o $(OBJ)/boot.o
+OBJECTS = $(OBJ)/kernel.o $(OBJ)/boot.o $(OBJ)/vga.o
 
 all: $(TARGET)
 
@@ -25,6 +25,9 @@ $(OBJ)/kernel.o: $(SRC)/kernel.c | $(OBJ)
 
 $(OBJ)/boot.o: $(ASM)/boot.asm | $(OBJ)
 	$(AS) $(ASFLAG) $< -o $@
+
+$(OBJ)/vga.o: $(SRC)/vga.c | $(OBJ)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BIN):
 	mkdir -p $@
