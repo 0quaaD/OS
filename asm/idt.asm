@@ -1,6 +1,6 @@
 [bits 32]
 
-; void __attribute__((packed)) i686_IDT_Load(IDTDesc* idt_descriptor);
+; void __attribute__((cdecl)) i686_IDT_Load(IDTDesc* idt_descriptor);
 global i686_IDT_Load
 
 i686_IDT_Load:
@@ -9,7 +9,6 @@ i686_IDT_Load:
 
     mov eax, [ebp + 8]
     lidt [eax]
-
-    mov esp, ebp
-    pop ebp
+    
+    leave
     ret

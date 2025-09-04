@@ -7,7 +7,7 @@ typedef struct {
     uint16_t segmentSel;
     uint8_t reserved;
     uint8_t flags;
-    uint8_t offsetHigh;
+    uint16_t offsetHigh;
 } __attribute__((packed)) IDTEntry;
 
 typedef struct {
@@ -16,20 +16,6 @@ typedef struct {
 } __attribute__((packed)) IDTDesc;
 
 
-typedef enum {
-    IDT_FLAG_GATE_TASK          = 0x5,
-    IDT_FLAG_GATE_16BIT_INT     = 0x6,
-    IDT_FLAG_GATE_16BIT_TRAP    = 0x7,
-    IDT_FLAG_GATE_32BIT_INT     = 0xE,
-    IDT_FLAG_GATE_32BIT_TRAP    = 0xF,
-
-    IDT_FLAG_RING0              = (0 << 5),
-    IDT_FLAG_RING1              = (1 << 5),
-    IDT_FLAG_RING2              = (2 << 5),
-    IDT_FLAG_RING3              = (3 << 5),
-
-    IDT_FLAG_PRESENT            = 0x80
-} IDT_FLAGS;
 IDTEntry idt_entry[256];
 IDTDesc idt_descriptor = {sizeof(idt_entry) - 1, idt_entry};
 
@@ -44,11 +30,11 @@ void i686_IDT_SetGate(int interrupt, void* base, uint16_t segmentDesc, uint8_t f
 }
 
 void i686_IDT_EnableGate(int interrupt){
-    FLAG_SET(idt_entry[interrupt].flags, IDT_FLAGS_PRESENT);    
+    FLAG_SET(idt_entry[interrupt].flags, IDT_FLAG_PRESENT);    
 }
 
 void i686_IDT_DisableGate(int interrupt){
-    FLAG_UNSET(idt_entry[interrupt].flags, IDT_FLAGS_PRESENT);    
+    FLAG_UNSET(idt_entry[interrupt].flags, IDT_FLAG_PRESENT);    
 }
 
 void i686_IDT_init(){

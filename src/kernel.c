@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "kernel.h"
 #include "vga.h"
+#include "hal.h"
 
 #if defined(__linux__)
 #error  "You are not using cross-compiler. You use system's compiler!"
@@ -12,8 +13,7 @@
 #endif
 
 void maink(void){
-    initWindow();
-    print("1st message without any escape chars.");
-    print("2nd message with \nnewline.\n");
-    print("3rd message with \ttab.\n");
+    	HAL_init();
+	initWindow();
+	print("If you can see this message, then everything that exists works properly!\n");
 }

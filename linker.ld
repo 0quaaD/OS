@@ -2,7 +2,7 @@ ENTRY(_start)
 
 SECTIONS
 {
-	. = 2M;
+	. =  0x00100000;
 	.text BLOCK(4K) : ALIGN(4K) {
 	      *(.multiboot*)
 	      *(.text*)
