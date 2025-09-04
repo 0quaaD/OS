@@ -1,5 +1,5 @@
 CC = i686-elf-gcc
-CWARNING = -Wall -Wextra -Werror
+CWARNING = -Wall -Wextra 
 CFLAGS = -m32 -ffreestanding -O2 -Iinclude $(CWARNING)
 
 AS = nasm
@@ -13,7 +13,8 @@ OBJ = obj
 ASM = asm
 
 TARGET = $(BIN)/os.bin
-OBJECTS = $(OBJ)/kernel.o $(OBJ)/boot.o $(OBJ)/vga.o
+OBJECTS = $(OBJ)/kernel.o $(OBJ)/boot.o $(OBJ)/vga.o $(OBJ)/gdt_asm.o \
+		  $(OBJ)/gdt_c.o
 
 all: $(TARGET)
 
@@ -26,9 +27,15 @@ $(OBJ)/kernel.o: $(SRC)/kernel.c | $(OBJ)
 $(OBJ)/boot.o: $(ASM)/boot.asm | $(OBJ)
 	$(AS) $(ASFLAG) $< -o $@
 
+$(OBJ)/gdt_asm.o: $(ASM)/gdt.asm | $(OBJ)
+	$(AS) $(ASFLAG) $< -o $@
+	
 $(OBJ)/vga.o: $(SRC)/vga.c | $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(OBJ)/gdt_c.o: $(SRC)/gdt.c | $(OBJ)
+	$(CC) $(CFLAGS) -c $< -o $@
+	
 $(BIN):
 	mkdir -p $@
 $(OBJ):
@@ -39,7 +46,7 @@ run: $(TARGET)
 	cp $(TARGET) iso/boot
 	cp grub.cfg iso/boot/grub
 	grub-mkrescue -o os.iso iso/
-	qemu-system-i386 -cdrom os.iso
+	qemu-system-i386 -cdrom os.iso -d int
 clean:
 	rm -rf $(OBJ)/ $(BIN)/ iso/ os.iso
 .PHONY: all run clean

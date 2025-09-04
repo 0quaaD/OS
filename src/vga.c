@@ -36,7 +36,8 @@ void printChar(unsigned char c){
         return;
     }
    
-    // First method for '\t'
+    // First method for '\t' -> Bitwise operation
+    
     if(c == '\t'){
         term_col = (term_col + 8) & ~7;
         if(++term_col >= VGA_WIDTH){
@@ -45,8 +46,25 @@ void printChar(unsigned char c){
         }
         return;
     }
+    
 
-    // Second method for '\t'
+    // Second method for '\t' -> regular adding spaces one by one
+    /*
+    if(c == '\t'){
+        do{
+            if(++term_col >= VGA_WIDTH){
+                term_col = 0;
+                if(++term_row >= VGA_HEIGHT)
+                    term_row = 0;
+                break;
+            }
+            const size_t idx = term_row * VGA_WIDTH + term_col;
+            VGA_MEM[idx] = vga_entry(' ', term_color);
+            term_col++;
+        } while(term_color % 8 != 0);
+        return;
+    }*/
+    
     const int idx = term_row * VGA_WIDTH + term_col;
     VGA_MEM[idx] = vga_entry(c, term_color);
     if(++term_col == VGA_WIDTH){
@@ -56,6 +74,7 @@ void printChar(unsigned char c){
     }
     
 }
+
 void print(const char *data){
     for(size_t i=0;i<strlen(data);i++){
         printChar(data[i]);
