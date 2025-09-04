@@ -12,6 +12,8 @@
 #endif
 
 void maink(void){
-  terminal_init();
-  terminal_printstr("Hello World!\n");
+    initWindow();
+    print("1st message without any escape chars.");
+    print("2nd message with \nnewline.\n");
+    print("3rd message with \ttab.\n");
 }

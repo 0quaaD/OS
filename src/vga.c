@@ -12,13 +12,13 @@ size_t strlen(const char *str){
 #define VGA_HEIGHT 25
 uint16_t* VGA_MEM = (uint16_t*)0xB8000;
 
-size_t row;
-size_t col;
+size_t term_row;
+size_t term_col;
 uint8_t term_color;
 
-void terminal_init(void){
-  row = 0;
-  col = 0;
+void initWindow(void){
+  term_row = 0;
+  term_col = 0;
   term_color = vga_entry_color(COLOR_LIGHT_GRAY, COLOR_BLACK);
   for(size_t y = 0; y < VGA_HEIGHT; y++){
     for(size_t x = 0; x < VGA_WIDTH; x++){
@@ -28,29 +28,36 @@ void terminal_init(void){
   }
 }
 
-void terminal_setcolor(uint8_t color){
-  term_color = color;
-}
+void printChar(unsigned char c){
+    if(c == '\n'){
+        term_col = 0;
+        if(++term_row >= VGA_HEIGHT)
+            term_row = 0;
+        return;
+    }
+   
+    // First method for '\t'
+    if(c == '\t'){
+        term_col = (term_col + 8) & ~7;
+        if(++term_col >= VGA_WIDTH){
+            if(++term_row == VGA_HEIGHT)
+              term_row = 0;
+        }
+        return;
+    }
 
-void terminal_putentryat(char c, uint8_t color, size_t x, size_t y){
-  const size_t idx = y * VGA_WIDTH + x;
-  VGA_MEM[idx] = vga_entry(c, color);
+    // Second method for '\t'
+    const int idx = term_row * VGA_WIDTH + term_col;
+    VGA_MEM[idx] = vga_entry(c, term_color);
+    if(++term_col == VGA_WIDTH){
+        term_col = 0;
+        if(++term_row == VGA_HEIGHT)
+            term_row = 0;
+    }
+    
 }
-
-void terminal_putchar(char c){
-  terminal_putentryat(c, term_color, col, row);
-  if(++col == VGA_WIDTH){
-    col = 0;
-    if(++row == VGA_HEIGHT)
-      row = 0;
-  }
-}
-
-void terminal_write(const char *data, size_t size){
-  for(size_t i = 0; i < size; i++)
-    terminal_putchar(data[i]);
-}
-
-void terminal_printstr(const char *data){
-  terminal_write(data, strlen(data));
+void print(const char *data){
+    for(size_t i=0;i<strlen(data);i++){
+        printChar(data[i]);
+    }
 }

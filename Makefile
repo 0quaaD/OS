@@ -39,7 +39,7 @@ run: $(TARGET)
 	cp $(TARGET) iso/boot
 	cp grub.cfg iso/boot/grub
 	grub-mkrescue -o os.iso iso/
-	qemu-system-i386 -cdrom os.iso -monitor stdio
+	qemu-system-i386 -cdrom os.iso
 clean:
 	rm -rf $(OBJ)/ $(BIN)/ iso/ os.iso
 .PHONY: all run clean
