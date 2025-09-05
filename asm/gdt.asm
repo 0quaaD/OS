@@ -1,40 +1,16 @@
-[bits 32]
+global gdt_flush
 
-; void __attribute__((cdecl)) i686_GDT_Load(GDTDesc* gdt_descriptor, uint16_t codeSegment, uint16_t dataSegment);
-global i686_GDT_Load
-i686_GDT_Load:
-
-    ; make new call frame
-    push ebp
-    mov ebp, esp
-    push eax
-    push ebx
-    
-    ; load gdt
-    mov eax, [ebp + 8]
+gdt_flush:
+    mov eax, [esp + 4]
     lgdt [eax]
 
-    ; reload code segment
-    mov eax, [ebp + 12]
-    mov ebx, [ebp + 16]
-    
-    push eax
-    push .reload_cs
-    retf
-
-.reload_cs:
-    ; reload data segment
-    mov ax, [ebp + 16]
+    mov eax, 0x10
     mov ds, ax
     mov es, ax
     mov fs, ax
     mov gs, ax
     mov ss, ax
-    
-    ; restore old call frame
-    pop ebx
-    pop eax
-    leave
-    ret
-        
+    jmp 0x08:.flush
 
+.flush:
+    ret

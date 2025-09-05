@@ -1,7 +1,19 @@
 #pragma once
+#include "stdint.h"
 
-#define i686_GDT_CODE_SEGMENT  0x08
-#define i686_GDT_DATA_SEGMENT  0x10
+typedef struct {
+    uint16_t limitLow;
+    uint16_t baseLow;
+    uint8_t baseMid;
+    uint8_t accessByte;
+    uint8_t flags;
+    uint8_t baseHigh;
+} __attribute__((packed)) GDTEntry;
 
+typedef struct {
+    uint16_t limit;
+    uint32_t base;
+} __attribute__((packed)) GDTptr;
 
-void i686_GDT_init();
+void initGDT();
+void setGDTGate(uint32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran);

@@ -1,6 +1,6 @@
 CC = i686-elf-gcc
 CWARNING = -Wall -Wextra -Werror
-CFLAGS = -m32 -ffreestanding -O2 -Iinclude -ggdb $(CWARNING)
+CFLAGS = -m32 -ffreestanding -O2 -Iinclude -ggdb -fno-stack-protector -fno-builtin $(CWARNING)
 
 AS = nasm
 ASFLAG = -f elf32
@@ -13,7 +13,7 @@ OBJ = obj
 ASM = asm
 
 TARGET = $(BIN)/os.bin
-OBJECTS = $(OBJ)/kernel.o $(OBJ)/boot.o $(OBJ)/vga.o $(OBJ)/gdt_asm.o $(OBJ)/gdt_c.o $(OBJ)/idt_c.o $(OBJ)/idt_asm.o 
+OBJECTS = $(OBJ)/kernel.o $(OBJ)/boot.o $(OBJ)/vga.o $(OBJ)/gdt_asm.o $(OBJ)/gdt_c.o 
 
 all: $(TARGET)
 
@@ -29,19 +29,12 @@ $(OBJ)/boot.o: $(ASM)/boot.asm | $(OBJ)
 $(OBJ)/gdt_asm.o: $(ASM)/gdt.asm | $(OBJ)
 	$(AS) $(ASFLAG) $< -o $@
 	
-$(OBJ)/idt_asm.o: $(ASM)/idt.asm | $(OBJ)
-	$(AS) $(ASFLAG) $< -o $@
-	
 $(OBJ)/vga.o: $(SRC)/vga.c | $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ)/gdt_c.o: $(SRC)/gdt.c | $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 	
-$(OBJ)/idt_c.o: $(SRC)/idt.c | $(OBJ)
-	$(CC) $(CFLAGS) -c $< -o $@
-	
-
 $(BIN):
 	mkdir -p $@
 $(OBJ):
