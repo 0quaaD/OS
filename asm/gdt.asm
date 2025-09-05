@@ -7,13 +7,17 @@ i686_GDT_Load:
     ; make new call frame
     push ebp
     mov ebp, esp
-
+    push eax
+    push ebx
+    
     ; load gdt
     mov eax, [ebp + 8]
     lgdt [eax]
 
     ; reload code segment
     mov eax, [ebp + 12]
+    mov ebx, [ebp + 16]
+    
     push eax
     push .reload_cs
     retf
@@ -28,8 +32,9 @@ i686_GDT_Load:
     mov ss, ax
     
     ; restore old call frame
-    mov esp, ebp
-    pop ebp
+    pop ebx
+    pop eax
+    leave
     ret
         
 

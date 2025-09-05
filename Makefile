@@ -13,7 +13,7 @@ OBJ = obj
 ASM = asm
 
 TARGET = $(BIN)/os.bin
-OBJECTS = $(OBJ)/kernel.o $(OBJ)/boot.o $(OBJ)/vga.o $(OBJ)/gdt_asm.o $(OBJ)/gdt_c.o $(OBJ)/idt_c.o $(OBJ)/idt_asm.o $(OBJ)/hal.o
+OBJECTS = $(OBJ)/kernel.o $(OBJ)/boot.o $(OBJ)/vga.o $(OBJ)/gdt_asm.o $(OBJ)/gdt_c.o $(OBJ)/idt_c.o $(OBJ)/idt_asm.o 
 
 all: $(TARGET)
 
@@ -41,8 +41,6 @@ $(OBJ)/gdt_c.o: $(SRC)/gdt.c | $(OBJ)
 $(OBJ)/idt_c.o: $(SRC)/idt.c | $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 	
-$(OBJ)/hal.o: $(SRC)/hal.c | $(OBJ)
-	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BIN):
 	mkdir -p $@
