@@ -13,7 +13,7 @@ OBJ = obj
 ASM = asm
 
 TARGET = $(BIN)/os.bin
-OBJECTS = $(OBJ)/kernel.o $(OBJ)/boot.o $(OBJ)/vga.o $(OBJ)/gdt_asm.o $(OBJ)/gdt_c.o $(OBJ)/isr.o $(OBJ)/idt_asm.o $(OBJ)/idt_c.o 
+OBJECTS = $(OBJ)/kernel.o $(OBJ)/boot.o $(OBJ)/vga.o $(OBJ)/gdt_asm.o $(OBJ)/gdt_c.o $(OBJ)/idt_asm.o $(OBJ)/idt_c.o $(OBJ)/memory.o $(OBJ)/io.o
 
 all: $(TARGET)
 
@@ -32,9 +32,6 @@ $(OBJ)/gdt_asm.o: $(ASM)/gdt.asm | $(OBJ)
 $(OBJ)/idt_asm.o: $(ASM)/idt.asm | $(OBJ)
 	$(AS) $(ASFLAG) $< -o $@
 	
-$(OBJ)/isr.o: $(ASM)/basicISR.asm | $(OBJ)
-	$(AS) $(ASFLAG) $< -o $@
-	
 $(OBJ)/vga.o: $(SRC)/vga.c | $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -43,6 +40,13 @@ $(OBJ)/gdt_c.o: $(SRC)/gdt.c | $(OBJ)
 	
 $(OBJ)/idt_c.o: $(SRC)/idt.c | $(OBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
+	
+$(OBJ)/memory.o: $(SRC)/memory.c | $(OBJ)
+	$(CC) $(CFLAGS) -c $< -o $@
+	
+$(OBJ)/io.o: $(SRC)/io.c | $(OBJ)
+	$(CC) $(CFLAGS) -c $< -o $@
+
 $(BIN):
 	mkdir -p $@
 $(OBJ):
