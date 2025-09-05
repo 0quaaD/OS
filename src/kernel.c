@@ -1,5 +1,6 @@
 #include "kernel.h"
 #include "vga.h"
+#include "gdt.h"
 
 #if defined(__linux__)
 #error  "You are not using cross-compiler. You use system's compiler!"
@@ -10,6 +11,7 @@
 #endif
 
 void maink(void){
+    initGDT();
 	initWindow();
 	print("If you can see this message, then everything that exists works properly!\n");
     
